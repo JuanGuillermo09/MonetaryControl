@@ -1,0 +1,144 @@
+<div class="main-content">
+
+    <!-- Botón Editar (solo visible cuando no estamos editando) -->
+    @if (!isEditing) { <button
+        mat-button
+        class="fab-add"
+        (click)="toggleEdit()">
+        Editar
+    </button>}
+
+    <!-- Botón Guardar (solo visible cuando estamos editando) -->
+
+    @if (isEditing) { <button
+        mat-button
+        class="fab-add"
+        (click)="saveUser()">
+        Guardar
+    </button>}
+
+    <mat-card class="p-4 shadow-card">
+        <mat-card-header>
+            <app-custom-title-help-link title="Perfil del Usuario" />
+        </mat-card-header>
+
+        <mat-card-content>
+            @if (user(); as u) {
+            <form [formGroup]="userForm" class="grid gap-4">
+
+                <!-- Imagen actual -->
+                @if (previewUrl || user()?.profilePhoto) {
+                <div class="profile-photo">
+                    <p>Foto actual:</p>
+                    <div class="photo-wrapper">
+                        <img
+                            [src]="previewUrl ? previewUrl : user()?.profilePhoto"
+                            alt="Vista previa" />
+                    </div>
+                </div>
+                }
+
+                <!-- Subir nueva imagen -->
+                <app-custom-input
+                    label="Foto"
+                    type="file"
+                    placeholder="Selecciona una imagen"
+                    [control]="userForm.controls.ProfilePhoto"
+                    [disabled]="!isEditing"
+                    (change)="onFileSelected($event)">
+                </app-custom-input>
+
+                <!-- Nombre -->
+                <app-custom-input
+                    label="Nombre"
+                    type="text"
+                    placeholder="Nombre del usuario"
+                    [control]="userForm.controls.userName">
+                </app-custom-input>
+
+                <!-- Email -->
+                <app-custom-input
+                    label="Email"
+                    type="email"
+                    placeholder="Correo del usuario"
+                    [control]="userForm.controls.email">
+                </app-custom-input>
+
+                <!-- Salary -->
+                <app-custom-input
+                    label="Salario"
+                    type="number"
+                    placeholder="Salario del usuario"
+                    [control]="userForm.controls.salary">
+                </app-custom-input>
+
+                <!-- Rol -->
+                <app-custom-input
+                    label="Rol"
+                    type="text"
+                    placeholder="Rol asignado"
+                    [disabled]="true"
+                    [control]="userForm.controls.roleName">
+                </app-custom-input>
+
+                <!-- Estado -->
+                <app-custom-input
+                    label="Estado"
+                    type="text"
+                    placeholder="Activo/Inactivo"
+                    [disabled]="true"
+                    [control]="userForm.controls.isActive">
+                </app-custom-input>
+            </form>
+            } @else {
+            <p>No se encontró información del usuario.</p>
+            }
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="p-4 shadow-card" style="margin-top: 5px;">
+        <mat-card-header>
+            <app-custom-title-help-link title="Cambiar contraseña" />
+        </mat-card-header>
+
+        <mat-card-content>
+
+            @if (!isPassword) { <button
+                mat-button
+                class="fab"
+                (click)="togglePassword()">
+                Cambiar contraseña
+            </button>}
+            @if (isPassword) { <button
+                mat-button
+                class="fab"
+                (click)="togglePasswordCacelar()">
+                Cancelar
+            </button>}
+
+            <form [formGroup]="miForm" class="grid gap-4">
+                <app-custom-input label="Nueva contraseña" type="password"
+                    placeholder="monmetary12_@"
+                    [control]="miForm.controls.newPassword">
+                </app-custom-input>
+
+                <app-custom-input label="Comfirma nueva contraseña"
+                    type="password"
+                    placeholder="monmetary12_@"
+                    [control]="miForm.controls.confirmNewPassword">
+                </app-custom-input>
+
+                @if (isPassword) { <button
+                    mat-button
+                    class="fab"
+                    (click)="changeNewPassword()"
+                    [disabled]="miForm.invalid"
+                    [style.opacity]="miForm.invalid ? 0.5 : 1"
+                    [style.cursor]="miForm.invalid ? 'not-allowed' : 'pointer'">
+                    Guardar
+                </button>}
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+</div>

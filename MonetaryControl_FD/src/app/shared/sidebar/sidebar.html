@@ -1,0 +1,51 @@
+ @if(isOpen())
+{
+<div class="sidebar mat-elevation-z8">
+  <button mat-icon-button (click)="toggle()" class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-nav-list>
+    <a mat-list-item href="/dashboard">
+      <span>
+        <mat-icon>
+          home
+        </mat-icon>
+        Inicio
+      </span>
+    </a>
+    <a mat-list-item href="/profile">
+      <span>
+        <mat-icon>
+          person
+        </mat-icon>
+        Perfil
+      </span>
+    </a>
+        <a mat-list-item href="/home">
+      <span>
+        <mat-icon>
+          table_chart
+        </mat-icon>
+        Historial de gastos
+      </span>
+    </a>
+    <a mat-list-item href="#">
+      <span>
+        <mat-icon>
+          settings
+        </mat-icon>
+        Configuración
+      </span>
+    </a>
+
+    <a mat-list-item class="logout" (click)="logout()">
+      <span>
+        <mat-icon>
+          arrow_back
+        </mat-icon>
+        Cerrar sesion
+      </span>
+    </a>
+  </mat-nav-list>
+</div>
+}

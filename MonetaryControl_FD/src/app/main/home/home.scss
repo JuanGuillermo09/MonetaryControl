@@ -1,0 +1,85 @@
+.main-content {
+  padding: 16px;
+  padding-top: 80px;
+  /* en vez de margin-top */
+
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  /* si hay mucho contenido, scroll solo aquí */
+}
+
+
+
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  /* separa izquierda y derecha */
+  align-items: center;
+
+  .fab-add {
+    margin-bottom: 20px;
+    background-color: #005cbb;
+    /* tu color personalizado */
+    color: #d7e3ff;
+    /* icono en blanco */
+    border: none;
+    /* sin borde */
+    border-radius: 5px;
+    /* completamente redondo */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+
+}
+
+
+
+
+.fab-add:hover {
+  background-color: #004494;
+  /* un tono más oscuro al hover */
+}
+
+
+.table-container {
+  max-height: 400px;
+  /* 👈 ajusta la altura máxima */
+  overflow-y: auto;
+  /* 👈 solo hace scroll el contenido */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+
+table {
+  width: 100%;
+
+}
+
+mat-paginator {
+
+  bottom: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+}
+
+.fab-delete{
+  margin: 1px;
+  color: aliceblue;
+  border: none;
+  border-radius: 5px;
+  background-color: #940000;
+}
+
+.fab-visibility{
+  margin: 1px;
+  color: aliceblue;
+  border: none;
+  border-radius: 5px;
+  background-color: #004494;
+}

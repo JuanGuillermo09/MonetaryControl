@@ -1,0 +1,21 @@
+    .header-toolbar {
+      position: fixed;
+      margin: 0;
+      padding: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      z-index: 1000;
+      background-color: #d7e3ff;
+      color: #005cbb;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    button {
+      color: #005cbb;
+    }

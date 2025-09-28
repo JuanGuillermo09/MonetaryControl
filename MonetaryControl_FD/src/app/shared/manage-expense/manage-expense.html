@@ -1,0 +1,72 @@
+
+<div class="main-content">
+    <mat-card class="p-4 shadow-card">
+        <mat-card-header>
+            <app-custom-title-help-link title="Gasto" />
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="userForm" class="grid gap-4">
+
+                <!-- Imagen actual -->
+                @if (previewUrl) {
+                <div class="profile-photo">
+                    <p>Foto:</p>
+                    <div class="photo-wrapper">
+                        <img
+                            [src]="previewUrl "
+                            alt="Vista previa" />
+                    </div>
+                </div>
+                }
+
+                <!-- Subir nueva imagen -->
+                <app-custom-input
+                    label="Foto"
+                    type="file"
+                    placeholder="Selecciona una imagen"
+                    [control]="userForm.controls.invoice"
+                    (change)="onFileSelected($event)">
+                </app-custom-input>
+
+                <!-- Nombre -->
+                <app-custom-input
+                    label="Description"
+                    type="textarea"
+                    [control]="userForm.controls.description">
+                </app-custom-input>
+
+                <!-- Email -->
+                <app-custom-input
+                    label="Cantegoria"
+                    type="text"
+                    placeholder="Correo del usuario"
+                    [control]="userForm.controls.category">
+                </app-custom-input>
+
+                <!-- Salary -->
+                <app-custom-input
+                    label="Cantidad"
+                    type="number"
+                    placeholder="Salario del usuario"
+                    [control]="userForm.controls.amount">
+                </app-custom-input>
+
+                <div class="signature-container">
+                    <signature-pad [options]="signaturePadOptions"
+                        #signaturePad></signature-pad>
+                    <div class="signature-actions">
+                        <button type="button" class="fab"
+                            (click)="clearSignature()">Limpiar firma</button>
+                        <button type="button" class="fab"
+                            (click)="clearForm()">Limpiar campos</button>
+                        <button type="button" class="fab"
+                            (click)="saveExpense() ">Guardar</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </mat-card-content>
+    </mat-card>
+</div>

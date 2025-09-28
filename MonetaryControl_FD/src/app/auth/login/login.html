@@ -1,0 +1,34 @@
+
+<div class="login-controler">
+    <mat-card>
+        <app-custom-title-help-link
+            title="Login">
+        </app-custom-title-help-link>
+        <!-- <mat-card-title>Inicio de sesión</mat-card-title> -->
+        <mat-card-content>
+            <form [formGroup]="miForm" (ngSubmit)="submit()">
+                <app-custom-input
+                    label="Correo"
+                    type="email"
+                    placeholder="monetary@control.com"
+                    [control]="emailCtrl">
+                </app-custom-input>
+
+                <app-custom-input
+                    label="Contraseña"
+                    type="password"
+                    placeholder="********"
+                    [control]="passwordCtrl">
+                </app-custom-input>
+
+                <app-custom-title-help-link routerLink="/recover-password"
+                    helpText="¿Olvidaste tu contraseña?">
+                </app-custom-title-help-link>
+                <mat-checkbox formControlName="rememberMe">Recordarme</mat-checkbox>
+                <div class="button">
+                    <button type="submit" mat-button>Ingresar</button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

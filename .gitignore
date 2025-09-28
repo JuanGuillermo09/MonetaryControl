@@ -1,0 +1,50 @@
+############################
+# Visual Studio / C# Backend
+############################
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+*.dbmdl
+*.bak
+*.obj
+*.dll
+*.pdb
+*.exe
+*.vsidx
+*.lock.json
+
+# Binarios de compilación
+bin/
+obj/
+Debug/
+Release/
+
+# Archivos de configuración de usuario
+*.userosscache
+*.sln.docstates
+
+############################
+# Angular / Frontend
+############################
+node_modules/
+dist/
+tmp/
+out-tsc/
+.angular/
+.angular-cache/
+
+############################
+# Sistema / General
+############################
+Thumbs.db
+Desktop.ini
+*.DS_Store
+*.log
+*.tmp
+
+############################
+# Entornos
+############################
+.env

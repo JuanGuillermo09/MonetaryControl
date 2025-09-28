@@ -1,0 +1,69 @@
+<!-- custom-input.component.html (reemplaza el template actual) -->
+
+<!-- TEXTAREA -->
+@if (type === 'textarea') {
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{ label }}</mat-label>
+    <textarea matInput rows="40" [formControl]="control"></textarea>
+  </mat-form-field>
+}
+
+<!-- FILE -->
+@else if (type === 'file') {
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{ label }}</mat-label>
+
+    <!-- input real oculto -->
+    <input
+      type="file"
+      accept="image/*"
+      hidden
+      [disabled]="disabled"
+      #fileInput />
+
+    <!-- input visual -->
+    <input
+      matInput
+      readonly
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      (click)="fileInput.click()" />
+
+    <!-- icon alineado dentro del mat-form-field -->
+    <button mat-icon-button matSuffix type="button" (click)="fileInput.click()" aria-label="Subir archivo">
+      <mat-icon>upload</mat-icon>
+    </button>
+  </mat-form-field>
+}
+
+<!-- PASSWORD -->
+@else if (type === 'password') {
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{ label }}</mat-label>
+
+    <input
+      matInput
+      [formControl]="control"
+      [type]="hide ? 'password' : 'text'"
+      [autocomplete]="autocomplete"
+      [placeholder]="placeholder" />
+
+    <button mat-icon-button matSuffix type="button" (click)="togglePassword()" aria-label="Mostrar/ocultar contraseña">
+      <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  </mat-form-field>
+}
+
+<!-- DEFAULT (input normal) -->
+@else {
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>{{ label }}</mat-label>
+
+    <input
+      matInput
+      [formControl]="control"
+      [type]="type"
+      [autocomplete]="autocomplete"
+      [placeholder]="placeholder" />
+  </mat-form-field>
+}
