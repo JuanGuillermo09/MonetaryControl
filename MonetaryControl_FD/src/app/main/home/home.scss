@@ -36,15 +36,16 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   }
 
+  .fab-add:hover {
+    background-color: #004494;
+    /* un tono más oscuro al hover */
+  }
+
+
 }
 
 
 
-
-.fab-add:hover {
-  background-color: #004494;
-  /* un tono más oscuro al hover */
-}
 
 
 .table-container {
@@ -68,18 +69,30 @@ mat-paginator {
 
 }
 
-.fab-delete{
+.fab-delete {
   margin: 1px;
   color: aliceblue;
   border: none;
   border-radius: 5px;
   background-color: #940000;
+ transition:  0.5s ;
 }
 
-.fab-visibility{
+.fab-visibility {
   margin: 1px;
   color: aliceblue;
   border: none;
   border-radius: 5px;
   background-color: #004494;
+  transition:  0.5s ;
+}
+
+.fab-visibility:hover {
+  color: #004494;
+  background-color: aliceblue;
+}
+
+.fab-delete:hover {
+  color: #940000;
+  background-color: aliceblue;
 }

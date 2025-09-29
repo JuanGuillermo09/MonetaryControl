@@ -147,10 +147,26 @@ export class Profile {
         this.userForm.controls.isActive.disable();
         this.isEditing = false;
 
+        // ✅ Alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Guardado!',
+          text: 'El usuario se actualizó correctamente',
+          timer: 2000,
+          showConfirmButton: false
+        });
+
         // Actualizamos la señal con los nuevos datos
         this.user.set({ ...this.user(), ...this.userForm.value });
       },
-      error: (err) => console.error('Error al guardar usuario', err)
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al guardar',
+          text: 'Ocurrió un problema al guardar perfil',
+        });
+        console.error('Error al guardar usuario', err);
+      }
     });
   }
 

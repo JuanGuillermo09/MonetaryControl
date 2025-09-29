@@ -9,6 +9,8 @@ import { Home } from '../../service/home';
 import { AngularSignaturePadModule, SignaturePadComponent, NgSignaturePadOptions } from '@almothafar/angular-signature-pad';
 
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 
 
@@ -26,6 +28,7 @@ export class ManageExpense {
   imagenBase64: string | null = null;
 
   private expenseService = inject(Home);
+  private router = inject(Router);
 
   @ViewChild('signaturePad') signaturePad!: SignaturePadComponent;
 
@@ -93,44 +96,76 @@ export class ManageExpense {
   // -----------------------------
   // Guardar usuario
   // -----------------------------
-  saveExpense() {
-    const idStr = localStorage.getItem('userId');
-    if (!idStr) return console.error('No hay userId en localStorage');
-    const id = Number(idStr);
-    if (isNaN(id)) return console.error('ID inválido:', idStr);
 
-    const formData = new FormData();
-    formData.append('UserId', String(id));
-    formData.append('description', this.userForm.value.description ?? '');
-    formData.append('category', this.userForm.value.category ?? '');
-    formData.append('amount', String(this.userForm.value.amount ?? 0));
+// -----------------------------
+// Guardar usuario
+// -----------------------------
+saveExpense() {
+  const idStr = localStorage.getItem('userId');
+  if (!idStr) return console.error('No hay userId en localStorage');
+  const id = Number(idStr);
+  if (isNaN(id)) return console.error('ID inválido:', idStr);
 
-    // 🔹 Capturar firma del signaturePad
-    if (this.signaturePad && !this.signaturePad.isEmpty()) {
-      const signatureBase64 = this.signaturePad.toDataURL('image/png');
-      const signatureBlob = this.base64ToBlob(signatureBase64.split(',')[1], 'image/png');
-      formData.append('signature', signatureBlob, `signature_${id}.png`);
-    } else {
-      console.warn('No se dibujó ninguna firma');
-    }
+  const formData = new FormData();
+  formData.append('UserId', String(id));
+  formData.append('description', this.userForm.value.description ?? '');
+  formData.append('category', this.userForm.value.category ?? '');
+  formData.append('amount', String(this.userForm.value.amount ?? 0));
 
-    // 🔹 Adjuntar factura si existe
-    const invoiceFile = this.userForm.value.invoice;
-    if (invoiceFile) {
-      formData.append('invoice', invoiceFile, invoiceFile.name);
-    }
-
-    console.log('==== FormData final a enviar ====');
-    formData.forEach((value, key) => console.log(key, value));
-
-    this.expenseService.CreateExpense(formData).subscribe({
-      next: (res) => {
-        console.log('Gasto guardado correctamente', res);
-        this.userForm.disable();
-      },
-      error: (err) => console.error('Error al guardar gasto', err)
-    });
+  // 🔹 Capturar firma del signaturePad
+  if (this.signaturePad && !this.signaturePad.isEmpty()) {
+    const signatureBase64 = this.signaturePad.toDataURL('image/png');
+    const signatureBlob = this.base64ToBlob(signatureBase64.split(',')[1], 'image/png');
+    formData.append('signature', signatureBlob, `signature_${id}.png`);
+  } else {
+    console.warn('No se dibujó ninguna firma');
   }
+
+  // 🔹 Adjuntar factura si existe
+  const invoiceFile = this.userForm.value.invoice;
+  if (invoiceFile) {
+    formData.append('invoice', invoiceFile, invoiceFile.name);
+  }
+
+  console.log('==== FormData final a enviar ====');
+  formData.forEach((value, key) => console.log(key, value));
+
+  this.expenseService.CreateExpense(formData).subscribe({
+    next: (res) => {
+      console.log('Gasto guardado correctamente', res);
+
+      // 🔹 Resetear formulario y limpiar firma
+      this.userForm.reset();
+      if (this.signaturePad) this.signaturePad.clear();
+
+      // 🔹 Mostrar alerta con opciones
+      Swal.fire({
+        title: '¡Guardado!',
+        text: 'El gasto se guardó correctamente',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Ir al Home',
+        cancelButtonText: 'Seguir aquí'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // 🔹 Redirigir a Home
+          this.router.navigate(['/home']);
+        }
+        // Si cancela, se queda en la misma vista
+      });
+    },
+    error: (err) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al guardar',
+        text: 'Ocurrió un problema al guardar el gasto',
+      });
+      console.error('Error al guardar gasto', err);
+    }
+  });
+}
+
+
 
 
 }

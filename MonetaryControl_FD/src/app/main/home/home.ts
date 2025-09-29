@@ -8,10 +8,18 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Home } from '../../service/home';
 import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
-  imports: [MatIconModule, MatTableModule, MatPaginatorModule, MatInputModule, CustomInput, RouterModule, DatePipe],
+  imports: [
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatInputModule,
+    CustomInput,
+    RouterModule,
+    DatePipe],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
@@ -20,16 +28,6 @@ export class Homes implements OnInit {
   private expenseService = inject(Home);
 
   showForm = false;
-
-  // Mostrar el formulario
-  openForm() {
-    this.showForm = true;
-  }
-
-  // Ocultar el formulario (opcional)
-  closeForm() {
-    this.showForm = false;
-  }
 
   ngOnInit() {
     const id = localStorage.getItem('userId');
@@ -66,5 +64,48 @@ export class Homes implements OnInit {
   filtrar(event: Event) {
     const filtro = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filtro.trim().toLowerCase();
+  }
+
+
+  // -----------------------------
+  // Eliminar gasto
+  // -----------------------------
+  deleteExpense(id: number) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Este gasto se eliminará de forma permanente',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.expenseService.DeleteExpense(id).subscribe({
+          next: (res) => {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: 'El gasto se eliminó correctamente',
+              timer: 2000,
+              showConfirmButton: false
+            });
+
+            // 🔹 Opcional: refrescar la lista de gastos
+            //this.loadExpenses(); // <-- crea este método para recargar los datos
+            this.dataSource.data = this.dataSource.data.filter(e => e.expenseId !== id);
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al eliminar',
+              text: 'Ocurrió un problema al eliminar el gasto',
+            });
+            console.error('Error al eliminar gasto', err);
+          }
+        });
+      }
+    });
   }
 }
