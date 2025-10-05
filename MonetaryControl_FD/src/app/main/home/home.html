@@ -44,7 +44,8 @@
         <th mat-header-cell *matHeaderCellDef sticky> Accion </th>
         <td mat-cell *matCellDef="let element">
           <button mat-button
-            class="fab-visibility">
+            class="fab-visibility"
+            (click)="openDetail(element.expenseId)">
             <mat-icon>
               visibility
             </mat-icon>
@@ -66,8 +67,11 @@
 
   <!-- El paginador SIEMPRE fijo abajo -->
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
-</div>
+  @if (isOpen()) {
+  <app-show-expense
+    [expenseId]="selectedExpenseId()"
+    (close)="toggleDetail()">
+  </app-show-expense>
+  }
 
-<!-- <button mat-button class="fab-add">
-  <mat-icon>add</mat-icon>
-</button> -->
+</div>

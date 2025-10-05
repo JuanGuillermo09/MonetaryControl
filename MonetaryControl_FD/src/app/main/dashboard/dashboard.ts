@@ -20,21 +20,24 @@ Chart.register(...registerables);
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
-  imports: [MatSidenavContainer, MatCard, MatToolbar, MatSidenavModule, MatIconModule, MatListModule, MatMenuModule, MatTableModule, DatePipe]
+  imports: [MatSidenavContainer, MatCard, MatToolbar, MatSidenavModule, MatIconModule, MatListModule, MatMenuModule, MatTableModule]
 })
-export class Dashboard implements AfterViewInit {
+export class Dashboard {
 
-  @ViewChild('chartCanvas') chartCanvas!: ElementRef;
-  chart!: Chart<'line'>;
 
   userId = Number(localStorage.getItem('userId'));
 
   private ExpenseService = inject(Home)
   private perfilService = inject(Perfil);
 
-  user = signal<any | null>(null);
 
+  totalGastos: number = 0;
 
+  Salary1: any;
+
+  MenosSalary: any;
+
+  recent = signal<any[]>([]);
 
   constructor() {
     const id = localStorage.getItem('userId');
@@ -45,31 +48,30 @@ export class Dashboard implements AfterViewInit {
       this.perfilService.ListUserId(userId).subscribe({
         next: (data) => {
           const salary = Number(data.salary) || 0;
-
+          this.Salary1 = salary
           this.kpis[0].value = `$${new Intl.NumberFormat('es-CO').format(salary)}`;
-
-          // Disponible (valor quemado por ahora)
-          const disponible = 1500000; // valor que ya pusiste
-          this.kpis[1].value = `$${new Intl.NumberFormat('es-CO').format(disponible)}`;
-
-          // Conversión respecto al salario
-          const porcentaje = salary > 0 ? (disponible / salary) * 100 : 0;
-          this.kpis[4].value = `${porcentaje.toFixed(0)}%`;
-
-          // ⚡ Actualizar gráfico con el salario
-          if (this.chart) {
-            this.chart.data.datasets[0].data = Array(12).fill(salary);
-            this.chart.update();
-          }
         },
         error: (err) => console.error('Error al obtener usuario:', err)
       });
 
-      // 🔹 KPI de pedidos (solo los del usuario logueado)
+      // 🔹 KPI de gastos últimos 30 días (solo usuario logueado)
       this.ExpenseService.ListExpenses().subscribe({
         next: (data) => {
-          const registrosUsuario = data.filter((r: any) => r.userId === userId);
-          this.kpis[2].value = registrosUsuario.length.toString();
+          // Actualizamos la lista completa de gastos
+          this.recent.set(data);
+          // Usamos directamente el filtro que ya tienes
+          const registrosUsuario = this.filteredRecent();
+          // Sumamos los gastos
+          const totalGastos = registrosUsuario.reduce((acc: number, r: any) => acc + (Number(r.amount) || 0), 0);
+          this.MenosSalary = this.Salary1 - totalGastos
+          // Mostramos el total en formato de pesos
+          this.kpis[2].value = `$${new Intl.NumberFormat('es-CO').format(totalGastos)}`;
+
+          this.kpis[1].value = `$${new Intl.NumberFormat('es-CO').format(this.MenosSalary)}`;
+
+          const porcentaje = this.Salary1 > 0 ? (this.MenosSalary / this.Salary1) * 100 : 0;
+          this.kpis[4].value = `${porcentaje.toFixed(0)}%`;
+
         },
         error: (err) => console.error('Error al obtener gastos:', err)
       });
@@ -84,61 +86,14 @@ export class Dashboard implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    const config: ChartConfiguration<'line'> = {
-      type: 'line',
-      data: {
-        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-        datasets: [
-          {
-            label: 'Ingresos',
-            data: [0, 0, 0, 0, 0, 0],  // placeholder
-            borderColor: '#3f51b5',
-            backgroundColor: 'rgba(63,81,181,0.3)',
-            fill: true,
-            tension: 0.3
-          },
-          {
-            label: 'Gastos',
-            data: [80000, 150000, 200000, 180000, 220000, 260000, 2600000, 260000, 260000, 260000, 260000, 260000], // placeholder
-            borderColor: '#e91e63',
-            backgroundColor: 'rgba(233,30,99,0.3)',
-            fill: true,
-            tension: 0.3
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'bottom' },
-          tooltip: { enabled: true }
-        },
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    };
-
-    this.chart = new Chart(this.chartCanvas.nativeElement, config);
-  }
-
-  year = new Date().getFullYear();
-
 
   kpis = [
-    { icon: 'sell', value: '', label: 'Ingresos' },
-    { icon: 'sell', value: '', label: 'Disponible' },
-    { icon: 'shopping_cart', value: '', label: 'Pedidos' },
+    { icon: 'monetization_on', value: '', label: 'Ingresos' },
+    { icon: 'attach_money', value: '', label: 'Disponible' },
+    { icon: 'shopping_cart', value: '', label: 'Gastos Ultimos(30 Dias)' },
     { icon: 'person', value: '', label: 'Usuarios' },
     { icon: 'insights', value: '', label: 'Conversión' },
   ];
-
-  displayedColumns: string[] = ['date', 'category', 'amount'];
-
-
-  recent = toSignal(this.ExpenseService.ListExpenses(), { initialValue: [] });
 
   // Filtramos solo registros del usuario y últimos 30 días
   filteredRecent = computed(() => {

@@ -1,14 +1,15 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { CustomInput } from "../../shared/custom-input/custom-input";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Home } from '../../service/home';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
+import { ShowExpense } from "../../shared/show-expense/show-expense";
 
 @Component({
   selector: 'app-home',
@@ -19,13 +20,30 @@ import Swal from 'sweetalert2';
     MatInputModule,
     CustomInput,
     RouterModule,
-    DatePipe],
+    DatePipe,
+    ShowExpense
+],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
 export class Homes implements OnInit {
 
   private expenseService = inject(Home);
+  private router = inject(Router);
+
+
+  // 👇 Signals para manejar el panel lateral
+  isOpen = signal(false);
+  selectedExpenseId = signal<number | null>(null);
+
+  openDetail(id: number) {
+    this.selectedExpenseId.set(id);
+    this.isOpen.set(true);
+  }
+
+  toggleDetail() {
+    this.isOpen.set(false);
+  }
 
   showForm = false;
 
@@ -108,4 +126,10 @@ export class Homes implements OnInit {
       }
     });
   }
+
+
+  verDetalle(id: number) {
+    this.router.navigate(['/show', id]);
+  }
+
 }

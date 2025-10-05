@@ -1,1 +1,59 @@
-<p>show-expense works!</p>
+<div class="overlay" (click)="onClose()"></div>
+
+<div class="show-panel mat-elevation-z8">
+  <button mat-icon-button class="close-btn" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (!loading && expense) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Detalle del Gasto</mat-card-title>
+      <mat-card-subtitle>ID #{{ expense.expenseId }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p><strong>Fecha:</strong> {{ expense.date | date:'dd/MM/yyyy' }}</p>
+      <p><strong>Monto:</strong> {{ expense.amount | currency:'COP' }}</p>
+      <p><strong>Descripción:</strong> {{ expense.description ||
+        'Sin descripción' }}</p>
+      <p><strong>Categoría:</strong> {{ expense.category || 'No especificada'
+        }}</p>
+      <p><strong>Usuario:</strong> {{ expense.userName || 'Desconocido' }}</p>
+
+      @if (expense.invoice) {
+      <div class="firma-section">
+        <p><strong>Foto:</strong></p>
+        <img [src]="'data:image/png;base64,' + expense.invoice"
+          class="firma-img" />
+      </div>
+      }
+
+      @if (!expense.invoice) {
+      <div class="no-image">
+        <p><em>No hay imágen disponibles.</em></p>
+      </div>
+      }
+
+      @if (expense.signature) {
+      <div class="firma-section">
+        <p><strong>Firma:</strong></p>
+        <img [src]="'data:image/png;base64,' + expense.signature"
+          class="firma-img" />
+      </div>
+      }
+
+      @if (!expense.signature) {
+      <div class="no-image">
+        <p><em>No hay firma disponibles.</em></p>
+      </div>
+      }
+    </mat-card-content>
+  </mat-card>
+  } @else {
+  <div class="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando detalle...</p>
+  </div>
+  }
+</div>

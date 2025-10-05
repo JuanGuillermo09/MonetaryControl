@@ -54,47 +54,7 @@
                 <li>There are no items.</li>
                 }
 
-            </div>
-
-            <!-- Grid principal: gráficas y tabla -->
-            <div class="main-grid">
-                <mat-card class="chart-card">
-                    <div class="card-header">Ventas (últimos 30 días)</div>
-                    <div class="chart-placeholder">
-                        <div class="chart-container">
-                            <canvas #chartCanvas></canvas>
-                        </div>
-                    </div>
-                </mat-card>
-
-                <mat-card class="transactions-card">
-                    <div class="card-header">Transacciones recientes</div>
-                    <table mat-table [dataSource]="filteredRecent()"
-                        class="mat-elevation-z1 simple-table">
-
-                        <ng-container matColumnDef="date">
-                            <th mat-header-cell *matHeaderCellDef>Fecha</th>
-                            <td mat-cell *matCellDef="let r">{{ r.date |
-                                date:'dd/MM/yyyy'}}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="category">
-                            <th mat-header-cell *matHeaderCellDef>Categoria</th>
-                            <td mat-cell *matCellDef="let r">{{r.category}}</td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="amount">
-                            <th mat-header-cell *matHeaderCellDef>Monto</th>
-                            <td mat-cell *matCellDef="let r">{{r.amount}}</td>
-                        </ng-container>
-
-                        <tr mat-header-row
-                            *matHeaderRowDef="['date', 'category', 'amount']"></tr>
-                        <tr mat-row
-                            *matRowDef="let row; columns: ['date', 'category', 'amount'];"></tr>
-                    </table>
-                </mat-card>
-            </div>
+            </div>         
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>
