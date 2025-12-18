@@ -19,6 +19,7 @@ export const routes: Routes = [
       {
         path: 'recover-password',
         loadComponent: () => import('./auth/recover-password/recover-password').then((m) => m.RecoverPassword),
+        //  canActivate: [authGuard]
       },
       {
         path: 'change-password',
@@ -27,7 +28,7 @@ export const routes: Routes = [
       },
       {
         path: 'home',
-        loadComponent: () => import('./main/home/home').then(m => m.Homes),
+        loadComponent: () => import('./pages/home/home').then(m => m.Homes),
         canActivate: [authGuard]
       },
       {
@@ -42,9 +43,15 @@ export const routes: Routes = [
       },
       {
         path: 'manage',
-        loadComponent: () => import('./shared/manage-expense/manage-expense').then(m => m.ManageExpense),
+        loadComponent: () => import('./pages/manage-expense/manage-expense').then(m => m.ManageExpense),
         canActivate: [authGuard]
       },
+      {
+        path: 'expense-items',
+        loadComponent: () => import('./pages/expense-items/expense-items').then(m => m.ExpenseItems),
+        canActivate: [authGuard]
+      },
+      
       {
         path: '',
         redirectTo: 'dashboard',

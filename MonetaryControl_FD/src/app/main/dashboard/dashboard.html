@@ -1,40 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #s mode="side" class="sidenav" fixedInViewport>
-        <div class="brand">
-            <mat-icon>dashboard</mat-icon>
-            <span>MiPanel</span>
-        </div>
-        <mat-nav-list>
-            <a mat-list-item href="#"><mat-icon>home</mat-icon>Inicio</a>
-            <a mat-list-item href="#"><mat-icon>analytics</mat-icon>Reportes</a>
-            <a mat-list-item
-                href="#"><mat-icon>inventory_2</mat-icon>Inventario</a>
-            <a mat-list-item href="#"><mat-icon>people</mat-icon>Usuarios</a>
-            <a mat-list-item
-                href="#"><mat-icon>settings</mat-icon>Configuración</a>
-        </mat-nav-list>
-        <div class="sidenav-footer">
-            <button mat-button><mat-icon>logout</mat-icon>Salir</button>
-        </div>
-    </mat-sidenav>
     <mat-sidenav-content>
-        <mat-toolbar color="primary" class="topbar">
-            <button mat-icon-button (click)="s.toggle()" class="mobile-toggle">
-                <mat-icon>menu</mat-icon>
-            </button>
-            <span class="title">Dashboard — Panel de control</span>
-
-            <span class="spacer"></span>
-
-            <button mat-icon-button [matMenuTriggerFor]="userMenu">
-                <mat-icon>account_circle</mat-icon>
-            </button>
-            <mat-menu #userMenu="matMenu">
-                <button mat-menu-item>Perfil</button>
-                <button mat-menu-item>Preferencias</button>
-                <button mat-menu-item>Salir</button>
-            </mat-menu>
-        </mat-toolbar>
 
         <div class="content">
             <!-- KPIs -->
@@ -54,7 +19,14 @@
                 <li>There are no items.</li>
                 }
 
-            </div>         
+            </div>
+
+            <!-- <div>
+                <app-custom-title-help-link
+                    title="Bienbenido">
+                </app-custom-title-help-link>
+            </div> -->
         </div>
+
     </mat-sidenav-content>
 </mat-sidenav-container>

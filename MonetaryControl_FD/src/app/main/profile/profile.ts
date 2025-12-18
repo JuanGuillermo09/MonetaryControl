@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { Perfil } from '../../service/perfil';
-import { CustomInput } from "../../shared/custom-input/custom-input";
+import { CustomInput } from "../../utils/custom-input/custom-input";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import Swal from 'sweetalert2';
-import { CustomTitleHelpLink } from "../../shared/custom-title-help-link/custom-title-help-link";
+import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
 import { ChangePassword } from '../../service/change-password';
 
 @Component({

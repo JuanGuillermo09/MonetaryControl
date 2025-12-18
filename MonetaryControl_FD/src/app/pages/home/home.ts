@@ -3,11 +3,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import { CustomInput } from "../../shared/custom-input/custom-input";
+import { CustomInput } from "../../utils/custom-input/custom-input";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Home } from '../../service/home';
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { ShowExpense } from "../../shared/show-expense/show-expense";
 
@@ -21,7 +21,8 @@ import { ShowExpense } from "../../shared/show-expense/show-expense";
     CustomInput,
     RouterModule,
     DatePipe,
-    ShowExpense
+    ShowExpense,
+    CurrencyPipe
 ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
@@ -29,7 +30,6 @@ import { ShowExpense } from "../../shared/show-expense/show-expense";
 export class Homes implements OnInit {
 
   private expenseService = inject(Home);
-  private router = inject(Router);
 
 
   // 👇 Signals para manejar el panel lateral
@@ -128,8 +128,5 @@ export class Homes implements OnInit {
   }
 
 
-  verDetalle(id: number) {
-    this.router.navigate(['/show', id]);
-  }
 
 }

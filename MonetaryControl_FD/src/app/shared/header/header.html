@@ -1,9 +1,12 @@
- <mat-toolbar class="header-toolbar">
-  <button mat-icon-button (click)="menuClick.emit()">
+<mat-toolbar class="header-toolbar">
+  <button mat-icon-button (click)="openDetail()">
     <mat-icon>menu</mat-icon>
   </button>
-  <span>{{userName()}}</span>
+
+  <span>{{ userName() }}</span>
   <span class="spacer"></span>
-  <!-- <button mat-icon-button><mat-icon>favorite</mat-icon></button>
-  <button mat-icon-button><mat-icon>share</mat-icon></button> -->
+
+  @if (isOpen()) {
+    <app-sidebar (Nav)="toggleDetail()"></app-sidebar>
+  }
 </mat-toolbar>

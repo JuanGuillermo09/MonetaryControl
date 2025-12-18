@@ -1,28 +1,38 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { CustomInput } from '../custom-input/custom-input';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { CustomTitleHelpLink } from '../custom-title-help-link/custom-title-help-link';
 import { Home } from '../../service/home';
-
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AngularSignaturePadModule, SignaturePadComponent, NgSignaturePadOptions } from '@almothafar/angular-signature-pad';
 
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { CustomInput } from '../../utils/custom-input/custom-input';
+import { CustomTitleHelpLink } from '../../utils/custom-title-help-link/custom-title-help-link';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
 @Component({
-  selector: 'app-manage-expense',
-  imports: [CustomInput, ReactiveFormsModule, MatCardModule, CustomTitleHelpLink, CommonModule, AngularSignaturePadModule],
-  templateUrl: './manage-expense.html',
-  styleUrl: './manage-expense.scss',
+  selector: 'app-expense-items',
+  imports: [CustomInput, ReactiveFormsModule, MatCardModule, CustomTitleHelpLink, CommonModule, AngularSignaturePadModule,  MatTabsModule, MatIconModule],
+  templateUrl: './expense-items.html',
+  styleUrl: './expense-items.scss',
 
 })
-export class ManageExpense {
+export class ExpenseItems {
+isMultipleMode = false;
 
+multiForm = new FormGroup({
+  description: new FormControl(''),
+  category: new FormControl(''),
+  amount: new FormControl<number | null>(null),
+});
+
+products: { description: string; category: string; amount: number }[] = [];
+editingIndex: number | null = null;
   // Imagen
   previewUrl: string | ArrayBuffer | null = null;
   imagenBase64: string | null = null;
@@ -36,6 +46,10 @@ export class ManageExpense {
     minWidth: 1,
     maxWidth: 1,
   };
+
+  switchMode(multiple: boolean) {
+  this.isMultipleMode = multiple;
+}
 
   // Función para limpiar la firma
   clearSignature() {
@@ -161,6 +175,94 @@ export class ManageExpense {
     });
   }
 
+// -----------------------------
+// AÑADIR PRODUCTO
+// -----------------------------
+addProduct() {
+  const desc = this.multiForm.value.description?.trim();
+  const cat = this.multiForm.value.category?.trim();
+  const amt = this.multiForm.value.amount;
 
+  if (!desc || !cat || amt == null) {
+    Swal.fire('Campos vacíos', 'Por favor completa todos los campos', 'warning');
+    return;
+  }
+
+  const newProduct = { description: desc, category: cat, amount: amt };
+
+  if (this.editingIndex !== null) {
+    this.products[this.editingIndex] = newProduct;
+    this.editingIndex = null;
+    Swal.fire('Actualizado', 'Producto editado correctamente', 'success');
+  } else {
+    this.products.push(newProduct);
+    Swal.fire('Agregado', 'Producto agregado a la lista', 'success');
+  }
+
+  this.multiForm.reset();
+}
+
+// -----------------------------
+// EDITAR PRODUCTO
+// -----------------------------
+editProduct(index: number) {
+  const p = this.products[index];
+  this.multiForm.setValue({
+    description: p.description,
+    category: p.category,
+    amount: p.amount,
+  });
+  this.editingIndex = index;
+}
+
+// -----------------------------
+// ELIMINAR PRODUCTO
+// -----------------------------
+deleteProduct(index: number) {
+  Swal.fire({
+    title: '¿Eliminar producto?',
+    text: 'Esta acción no se puede deshacer',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+  }).then((res) => {
+    if (res.isConfirmed) {
+      this.products.splice(index, 1);
+      Swal.fire('Eliminado', 'El producto fue eliminado', 'success');
+    }
+  });
+}
+
+// -----------------------------
+// GUARDAR TODOS EN LA BD
+// -----------------------------
+saveAllProducts() {
+  if (this.products.length === 0) {
+    Swal.fire('Sin productos', 'Agrega al menos un producto antes de guardar', 'warning');
+    return;
+  }
+
+  const idStr = localStorage.getItem('userId');
+  if (!idStr) return console.error('No hay userId en localStorage');
+  const id = Number(idStr);
+
+  const payload = this.products.map((p) => ({
+    userId: id,
+    description: p.description,
+    category: p.category,
+    amount: p.amount,
+  }));
+
+  // this.expenseService.CreateMultipleExpenses(payload).subscribe({
+  //   next: () => {
+  //     Swal.fire('Guardado', 'Todos los productos se guardaron correctamente', 'success');
+  //     this.products = [];
+  //   },
+  //   error: (err) => {
+  //     console.error('Error al guardar productos', err);
+  //     Swal.fire('Error', 'No se pudieron guardar los productos', 'error');
+  //   },
+  // });
+}
 
 }

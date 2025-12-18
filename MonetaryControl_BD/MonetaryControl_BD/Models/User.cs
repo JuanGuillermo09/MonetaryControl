@@ -31,5 +31,7 @@ public partial class User
 
     public virtual ICollection<Expense> Expenses { get; set; } = new List<Expense>();
 
+    public virtual ICollection<Saving> Savings { get; set; } = new List<Saving>();
+
     public virtual UserRole UserRoles { get; set; } = null!;
 }

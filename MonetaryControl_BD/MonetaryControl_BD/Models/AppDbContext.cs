@@ -15,7 +15,9 @@ public partial class AppDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Expense> Expenses { get; set; }
+    public virtual DbSet<Expense>   Expenses { get; set; }
+
+    public virtual DbSet<Saving> Savings { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -42,6 +44,25 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Expenses_User");
+        });
+
+        modelBuilder.Entity<Saving>(entity =>
+        {
+            entity.HasKey(e => e.SavingsId).HasName("PK__Savings__D75CB7F2508BC414");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(19, 2)");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.SavingsDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Savings)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_savings_user");
         });
 
         modelBuilder.Entity<User>(entity =>

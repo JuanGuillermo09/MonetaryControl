@@ -55,6 +55,7 @@ namespace MonetaryControl_BD.Service
                 UserRolesId = u.UserRolesId,
                 RoleName = u.UserRoles.RolesName,
                 Salary = u.Salary,
+                //Savings = u.Savings,
                 // Convertimos el byte[] a Base64
                 ProfilePhoto = u.ProfilePhoto != null
                     ? $"data:image/png;base64,{Convert.ToBase64String(u.ProfilePhoto)}"

@@ -3,9 +3,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
-import { CustomInput } from "../../shared/custom-input/custom-input";
+import { CustomInput } from "../../utils/custom-input/custom-input";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CustomTitleHelpLink } from "../../shared/custom-title-help-link/custom-title-help-link";
+import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -30,5 +30,9 @@ export class RecoverPassword {
 
   })
 
+  /** ✅ Getter que devuelve el control con tipo seguro */
+  get emailCtrl(): FormControl {
+    return this.miForm.get('email') as FormControl;
+  }
 
 }

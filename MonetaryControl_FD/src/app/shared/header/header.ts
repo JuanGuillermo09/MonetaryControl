@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { Sidebar } from "../sidebar/sidebar";
 
 
 
@@ -16,7 +17,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatButtonModule,
     MatIconModule,
     MatListModule,
-    CommonModule],
+    CommonModule,
+    Sidebar
+  ],
   templateUrl: './header.html',
   styleUrl: './header.scss'
 })
@@ -25,11 +28,16 @@ export class Header {
   // 👇 signal que mantiene el nombre
   userName = signal<string | null>(localStorage.getItem('userName'));
 
-  @Output() menuClick = new EventEmitter<void>();
+  isOpen = signal(false);
 
-  onMenuClick() {
-    this.menuClick.emit();
+  openDetail() {
+    this.isOpen.set(true); // 🔹 abrir sidebar
   }
+
+  toggleDetail() {
+    this.isOpen.set(false); // 🔹 cerrar sidebar
+  }
+
 
 
 }

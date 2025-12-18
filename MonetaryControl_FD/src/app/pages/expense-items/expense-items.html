@@ -1,0 +1,163 @@
+<div class="main-content">
+  <mat-card class="p-4 shadow-card">
+    <mat-card-header>
+      <app-custom-title-help-link title="Gasto" />
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <mat-tab-group>
+        <!-- ============================= -->
+        <!-- 🧍‍♂️ TAB 1: GASTO INDIVIDUAL -->
+        <!-- ============================= -->
+        <mat-tab label="Gasto individual">
+          <form [formGroup]="userForm" class="grid gap-4">
+
+            @if (previewUrl) {
+            <div class="profile-photo">
+              <p>Foto:</p>
+              <div class="photo-wrapper">
+                <img [src]="previewUrl" alt="Vista previa" />
+              </div>
+            </div>
+            }
+
+            <app-custom-input
+              label="Foto"
+              type="file"
+              placeholder="Selecciona una imagen"
+              [control]="userForm.controls.invoice"
+              (change)="onFileSelected($event)">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Descripción"
+              type="textarea"
+              [control]="userForm.controls.description">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Categoría"
+              type="text"
+              [control]="userForm.controls.category">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Cantidad"
+              type="number"
+              [control]="userForm.controls.amount">
+            </app-custom-input>
+
+            <div class="signature-container">
+              <signature-pad [options]="signaturePadOptions"
+                #signaturePad></signature-pad>
+              <div class="signature-actions">
+                <button type="button" class="fab"
+                  (click)="clearSignature()">Limpiar firma</button>
+                <button type="button" class="fab" (click)="clearForm()">Limpiar
+                  campos</button>
+                <button type="button" class="fab"
+                  (click)="saveExpense()">Guardar</button>
+              </div>
+            </div>
+          </form>
+        </mat-tab>
+
+        <!-- ============================= -->
+        <!-- 📦 TAB 2: CREAR MÚLTIPLES PRODUCTOS -->
+        <!-- ============================= -->
+        <mat-tab label="Crear múltiples productos">
+          <form [formGroup]="multiForm" class="grid gap-4">
+
+            @if (previewUrl) {
+            <div class="profile-photo">
+              <p>Foto:</p>
+              <div class="photo-wrapper">
+                <img [src]="previewUrl" alt="Vista previa" />
+              </div>
+            </div>
+            }
+
+            <app-custom-input
+              label="Foto"
+              type="file"
+              placeholder="Selecciona una imagen"
+              [control]="userForm.controls.invoice"
+              (change)="onFileSelected($event)">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Descripción"
+              type="textarea"
+              [control]="userForm.controls.description">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Categoría"
+              type="text"
+              [control]="multiForm.controls.category">
+            </app-custom-input>
+
+            <app-custom-input
+              label="Cantidad"
+              type="number"
+              [control]="multiForm.controls.amount">
+            </app-custom-input>
+
+            <div class="signature-container">
+              <signature-pad [options]="signaturePadOptions"
+                #signaturePad></signature-pad>
+              <div class="signature-actions">
+                <button type="button" class="fab"
+                  (click)="clearSignature()">
+                  Limpiar firma
+                </button>
+                <button type="button" class="fab" (click)="addProduct()">
+                  {{ editingIndex !== null ? 'Actualizar producto' :
+                  'Agregar producto' }}
+                </button>
+
+              </div>
+            </div>
+
+            <div class="table-container" *ngIf="products.length > 0">
+              <table class="product-table">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let p of products; let i = index">
+                    <td>{{ p.description }}</td>
+                    <td>{{ p.category }}</td>
+                    <td>{{ p.amount }}</td>
+                    <td>
+                      <button class="edit-btn" (click)="editProduct(i)">
+                        <mat-icon>
+                          visibility
+                        </mat-icon></button>
+                      <button class="delete-btn" (click)="deleteProduct(i)">
+                        <mat-icon>
+                          delete
+                        </mat-icon></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="signature-actions">
+                <button type="button" class="fab"
+                  (click)="saveAllProducts()">Guardar todos</button>
+              </div>
+            </div>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -4,64 +4,14 @@
 }
 
 .sidenav-container {
+  padding-top: 70px;
   height: 100%;
-}
-
-.sidenav {
-  width: 220px;
-  background: linear-gradient(180deg, #0f172a, #081028);
-  color: #fff;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px;
-  font-weight: 700;
-  font-size: 18px;
-}
-
-.brand mat-icon {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 6px;
-  border-radius: 6px;
-}
-
-mat-nav-list a.mat-list-item {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.sidenav-footer {
-  position: absolute;
-  bottom: 12px;
-  width: 100%;
-  padding: 0 12px;
-}
-
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-}
-
-.title {
-  font-weight: 600;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-.mobile-toggle {
-  display: none;
 }
 
 
 .content {
-  padding: 24px;
-  background: #f5f7fb;
+  padding: 10px;
+ 
   min-height: calc(100vh - 128px);
 }
 
@@ -93,93 +43,4 @@ mat-nav-list a.mat-list-item {
 .kpi-label {
   text-align: center;
   color: rgba(0, 0, 0, 0.6);
-}
-
-
-.main-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.chart-card,
-.transactions-card {
-  padding: 12px;
-}
-
-.card-header {
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-
-.chart-placeholder {
-  height:auto;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(90deg, #e6eefc, #f8fafc);
-  color: #334155;
-  border: 1px dashed rgba(0, 0, 0, 0.06);
-}
-
-.chart-container {
-  position: relative;
-  height: 300px;
-  width: 100%;
-}
-
-
-.simple-table {
-  width: 100%;
-}
-
-
-.bottom-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-.small-card {
-  padding: 12px;
-}
-
-.small-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.small-item {
-  padding: 8px;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-}
-
-
-.footer {
-  justify-content: center;
-}
-
-
-@media (max-width: 900px) {
-  .sidenav {
-    display: none;
-  }
-
-  .mobile-toggle {
-    display: inline-flex;
-  }
-
-  .main-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .bottom-cards {
-    grid-template-columns: 1fr;
-  }
 }

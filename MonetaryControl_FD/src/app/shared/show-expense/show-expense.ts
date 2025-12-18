@@ -2,12 +2,10 @@ import { Component, EventEmitter, inject, Input, Output, signal, ViewChild } fro
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Home } from '../../service/home';
-import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatSidenav } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

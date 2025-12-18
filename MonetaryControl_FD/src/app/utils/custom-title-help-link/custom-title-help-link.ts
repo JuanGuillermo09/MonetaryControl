@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-custom-title-help-link',
@@ -10,9 +10,11 @@ import { RouterModule } from '@angular/router';
 })
 export class CustomTitleHelpLink {
 
-  @Input() title!: string ;       // Texto que se muestra
+  @Input() title!: string;       // Texto que se muestra
   // @Input() routerLink!: string ;     // Ruta a la que redirige
   @Input() helpText!: string;
-  @Input() className!: string ;       // Clases CSS opcionales
+  @Input() className!: string;       // Clases CSS opcionales
+
+  @Input() routerLink!: string;
 
 }

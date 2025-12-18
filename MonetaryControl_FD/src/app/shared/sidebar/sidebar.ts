@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -23,11 +23,10 @@ export class Sidebar {
 
   private auth = inject(Auth)
 
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-  isOpen = signal(false);
+  @Output() Nav = new EventEmitter<void>();
 
-  toggle() {
-    this.isOpen.set(!this.isOpen());
+  onClose() {
+    this.Nav.emit(); // 🔹 Emite evento al padre (header)
   }
 
   logout() {

@@ -1,8 +1,7 @@
- @if(isOpen())
-{
-  <div class="overlay" (click)="toggle()"></div>
+
+<div class="overlay" (click)="onClose()"></div>
 <div class="sidebar mat-elevation-z8">
-  <button mat-icon-button (click)="toggle()" class="close-btn">
+  <button mat-icon-button (click)="onClose()" class="close-btn">
     <mat-icon>close</mat-icon>
   </button>
   <mat-nav-list>
@@ -22,7 +21,7 @@
         Perfil
       </span>
     </a>
-        <a mat-list-item href="/home">
+    <a mat-list-item href="/home">
       <span>
         <mat-icon>
           table_chart
@@ -33,9 +32,9 @@
     <a mat-list-item href="#">
       <span>
         <mat-icon>
-          settings
+          account_balance_wallet
         </mat-icon>
-        Configuración
+        Ahorros
       </span>
     </a>
 
@@ -49,4 +48,3 @@
     </a>
   </mat-nav-list>
 </div>
-}

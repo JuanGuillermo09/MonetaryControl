@@ -71,41 +71,51 @@ namespace MonetaryControl_BD.Service
 
         public async Task<ExpenseDto> CreateAsync(CreateExpenseDto dto)
         {
-            var entity = new Expense
-            {
-                Description = dto.Description,
-                Category = dto.Category,
-                Amount = decimal.Parse(dto.Amount),
-                Date = DateTime.Now
-            };
 
-            // ✅ Guardar firma como varbinary(MAX)
-            if (dto.Signature != null && dto.Signature.Length > 0)
+            try
             {
-                using var ms = new MemoryStream();
-                await dto.Signature.CopyToAsync(ms);
-                entity.Signature = ms.ToArray();
+                var entity = new Expense
+                {
+                    Description = dto.Description,
+                    Category = dto.Category,
+                    Amount = decimal.Parse(dto.Amount),
+                    Date = DateTime.Now
+                };
+
+                // ✅ Guardar firma como varbinary(MAX)
+                if (dto.Signature != null && dto.Signature.Length > 0)
+                {
+                    using var ms = new MemoryStream();
+                    await dto.Signature.CopyToAsync(ms);
+                    entity.Signature = ms.ToArray();
+                }
+
+                // ✅ Guardar factura como varbinary(MAX)
+                if (dto.Invoice != null && dto.Invoice.Length > 0)
+                {
+                    using var ms = new MemoryStream();
+                    await dto.Invoice.CopyToAsync(ms);
+                    entity.Invoice = ms.ToArray();
+                }
+
+                var saved = await _expenses.AddAsync(entity);
+
+                return new ExpenseDto
+                {
+                    Description = saved.Description,
+                    Category = saved.Category,
+                    Amount = saved.Amount,
+                    // ⚡ Mandamos como Base64 al frontend
+                    Signature = saved.Signature != null ? Convert.ToBase64String(saved.Signature) : null,
+                    Invoice = saved.Invoice != null ? Convert.ToBase64String(saved.Invoice) : null
+                };
+            }
+            catch (Exception)
+            {
+                
+                throw ;
             }
 
-            // ✅ Guardar factura como varbinary(MAX)
-            if (dto.Invoice != null && dto.Invoice.Length > 0)
-            {
-                using var ms = new MemoryStream();
-                await dto.Invoice.CopyToAsync(ms);
-                entity.Invoice = ms.ToArray();
-            }
-
-            var saved = await _expenses.AddAsync(entity);
-
-            return new ExpenseDto
-            {
-                Description = saved.Description,
-                Category = saved.Category,
-                Amount = saved.Amount,
-                // ⚡ Mandamos como Base64 al frontend
-                Signature = saved.Signature != null ? Convert.ToBase64String(saved.Signature) : null,
-                Invoice = saved.Invoice != null ? Convert.ToBase64String(saved.Invoice) : null
-            };
         }
 
 

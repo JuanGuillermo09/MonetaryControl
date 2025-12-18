@@ -10,8 +10,8 @@ import { MatTableModule } from '@angular/material/table';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { Perfil } from '../../service/perfil';
 import { Home } from '../../service/home';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { DatePipe } from '@angular/common';
+
+import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
 
 Chart.register(...registerables);
 
@@ -20,7 +20,7 @@ Chart.register(...registerables);
   selector: 'app-dashboard',
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss'],
-  imports: [MatSidenavContainer, MatCard, MatToolbar, MatSidenavModule, MatIconModule, MatListModule, MatMenuModule, MatTableModule]
+  imports: [MatSidenavContainer, MatCard, MatSidenavModule, MatIconModule, MatListModule, MatMenuModule, MatTableModule]
 })
 export class Dashboard {
 
@@ -48,8 +48,12 @@ export class Dashboard {
       this.perfilService.ListUserId(userId).subscribe({
         next: (data) => {
           const salary = Number(data.salary) || 0;
+          const savings = Number(data.savings) || 0;
           this.Salary1 = salary
           this.kpis[0].value = `$${new Intl.NumberFormat('es-CO').format(salary)}`;
+          this.kpis[5].value = `$${new Intl.NumberFormat('es-CO').format(savings)}`;
+          // console.log(data);
+          
         },
         error: (err) => console.error('Error al obtener usuario:', err)
       });
@@ -79,8 +83,8 @@ export class Dashboard {
 
     // 🔹 KPI de usuarios totales
     this.perfilService.ListUsers().subscribe({
-      next: (usuarios) => {
-        this.kpis[3].value = usuarios.length.toString();
+      next: (usuarios) => {      
+        this.kpis[3].value = usuarios.length.toString();      
       },
       error: (err) => console.error('Error al obtener usuarios:', err)
     });
@@ -93,6 +97,7 @@ export class Dashboard {
     { icon: 'shopping_cart', value: '', label: 'Gastos Ultimos(30 Dias)' },
     { icon: 'person', value: '', label: 'Usuarios' },
     { icon: 'insights', value: '', label: 'Conversión' },
+    { icon: 'account_balance_wallet', value: '', label: 'Ahorro' },
   ];
 
   // Filtramos solo registros del usuario y últimos 30 días
