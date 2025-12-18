@@ -7,8 +7,7 @@
         public string Email { get; set; } = null!;
         public bool IsActive { get; set; }
         public decimal? Salary { get; set; }
-
-        //public decimal? Savings { get; set; }
+        
         // Enviamos Base64 al frontend
         public string? ProfilePhoto { get; set; }
 
