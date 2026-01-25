@@ -6,7 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Auth } from '../../service/auth';
-import Swal from 'sweetalert2';
+import { Alert } from '../../service/alert';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 export class Sidebar {
 
   private auth = inject(Auth)
+  private alertService = inject(Alert)
 
   @Output() Nav = new EventEmitter<void>();
 
@@ -34,13 +35,6 @@ export class Sidebar {
     const userName = localStorage.getItem('userName') || 'Usuario';
     this.auth.logout(); // Llama al método de cierre de sesión
 
-    Swal.fire({
-      icon: 'info',
-      title: '¡Hasta luego!',
-      html: `<h4>${userName}</h4>
-      <p>Vuelve pronto, te estaremos esperando</p>`,
-      timer: 2000,
-      showConfirmButton: false
-    });
+    this.alertService.goodbye(userName);
   }
 }

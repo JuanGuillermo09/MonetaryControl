@@ -1,0 +1,54 @@
+<div class="overlay" (click)="onClose()"></div>
+
+<div class="show-panel mat-elevation-z8">
+  <button mat-icon-button class="close-btn" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (!loading && perfil) {
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Detalle del Usuario</mat-card-title>
+      <mat-card-subtitle>ID #{{ perfil.userId }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p><strong>Nombre:</strong> {{ perfil.userName }}</p>
+      <p><strong>Email:</strong> {{ perfil.email }}</p>
+      <p><strong>Rol:</strong> {{ perfil.roleName }}</p>
+      <p><strong>Salario:</strong> {{ perfil.salary | currency:'COP: ' }}</p>
+      <p><strong>Estado:</strong> 
+        @if (perfil.isActive) {
+          <span style="color: #4caf50;">Activo</span>
+        } @else {
+          <span style="color: #f44336;">Inactivo</span>
+        }
+      </p>
+      <p><strong>Fecha de creación:</strong> {{ perfil.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+      
+      @if (perfil.updatedAt) {
+        <p><strong>Última actualización:</strong> {{ perfil.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
+      }
+
+      @if (perfil.profilePhoto) {
+      <div class="firma-section">
+        <p><strong>Foto de perfil:</strong></p>
+        <img [src]="'data:image/png;base64,' + perfil.profilePhoto"
+          class="firma-img" />
+      </div>
+      }
+
+      @if (!perfil.profilePhoto) {
+      <div class="no-image">
+        <p><em>No hay foto de perfil disponible.</em></p>
+      </div>
+      }
+    </mat-card-content>
+  </mat-card>
+  } @else {
+  <div class="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando detalle...</p>
+  </div>
+  }
+</div>

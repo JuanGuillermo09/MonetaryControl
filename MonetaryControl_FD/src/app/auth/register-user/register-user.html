@@ -1,0 +1,70 @@
+<div class="main-content">
+    <mat-card class="p-4 shadow-card">
+        <mat-card-header>
+            <app-custom-title-help-link title="Registrar Nuevo Usuario" />
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="userForm" class="grid gap-4">
+                <!-- Foto -->
+                @if (previewUrl) {
+                <div class="profile-photo">
+                    <p>Vista previa:</p>
+                    <div class="photo-wrapper">
+                        <img [src]="previewUrl" alt="Vista previa" />
+                    </div>
+                </div>
+                }
+
+                <app-custom-input label="Foto" type="file" placeholder="Selecciona una imagen"
+                    [control]="userForm.controls.ProfilePhoto" (change)="onFileSelected($event)">
+                </app-custom-input>
+
+                <!-- Nombre -->
+                <app-custom-input label="Nombre" type="text" placeholder="Nombre del usuario"
+                    [control]="userForm.controls.userName">
+                </app-custom-input>
+
+                <!-- Email -->
+                <app-custom-input label="Email" type="email" placeholder="Correo del usuario"
+                    [control]="userForm.controls.email">
+                </app-custom-input>
+
+                <!-- Contraseña -->
+                <app-custom-input label="Contraseña" type="password" placeholder="Mínimo 6 caracteres"
+                    [control]="userForm.controls.password">
+                </app-custom-input>
+
+                <!-- Confirmar Contraseña -->
+                <app-custom-input label="Confirmar Contraseña" type="password" placeholder="Repite la contraseña"
+                    [control]="userForm.controls.confirmPassword">
+                </app-custom-input>
+
+                <!-- Salary -->
+                <app-custom-input label="Salario" type="text" placeholder="Salario del usuario"
+                    [control]="userForm.controls.salary">
+                </app-custom-input>
+
+                <!-- Rol -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Rol</mat-label>
+                    <mat-select [formControl]="userForm.controls.userRolesId">
+                        @if (roles().length === 0) {
+                        <mat-option disabled>No hay roles disponibles</mat-option>
+                        } @else {
+                        @for (role of roles(); track role) {
+                        <mat-option [value]="role.userRolesId">{{ role.rolesName }}</mat-option>
+                        }
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Botones -->
+                <div class="signature-actions">
+                    <button type="button" class="fab" (click)="clearForm()">Limpiar</button>
+                    <button type="button" class="fab" (click)="saveUser()">Guardar Usuario</button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

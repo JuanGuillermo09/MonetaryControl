@@ -1,4 +1,10 @@
 <div class="main-content">
+
+  <div>
+    <button mat-button class="fab-add" (click)="clearForm()" routerLink="/home">
+      Voler
+    </button>
+  </div>
   <mat-card class="p-4 shadow-card">
     <mat-card-header>
       <app-custom-title-help-link title="Gasto" />
@@ -22,42 +28,26 @@
             </div>
             }
 
-            <app-custom-input
-              label="Foto"
-              type="file"
-              placeholder="Selecciona una imagen"
-              [control]="userForm.controls.invoice"
-              (change)="onFileSelected($event)">
+            <app-custom-input label="Foto" type="file" placeholder="Selecciona una imagen"
+              [control]="userForm.controls.invoice" (change)="onFileSelected($event)">
             </app-custom-input>
 
-            <app-custom-input
-              label="Descripción"
-              type="textarea"
-              [control]="userForm.controls.description">
+            <app-custom-input label="Descripción" type="textarea" [control]="userForm.controls.description">
             </app-custom-input>
 
-            <app-custom-input
-              label="Categoría"
-              type="text"
-              [control]="userForm.controls.category">
+            <app-custom-input label="Categoría" type="text" [control]="userForm.controls.category">
             </app-custom-input>
 
-            <app-custom-input
-              label="Cantidad"
-              type="number"
-              [control]="userForm.controls.amount">
+            <app-custom-input label="Cantidad" type="number" [control]="userForm.controls.amount">
             </app-custom-input>
 
             <div class="signature-container">
-              <signature-pad [options]="signaturePadOptions"
-                #signaturePad></signature-pad>
+              <signature-pad [options]="signaturePadOptions" #signaturePad></signature-pad>
               <div class="signature-actions">
-                <button type="button" class="fab"
-                  (click)="clearSignature()">Limpiar firma</button>
+                <button type="button" class="fab" (click)="clearSignature()">Limpiar firma</button>
                 <button type="button" class="fab" (click)="clearForm()">Limpiar
                   campos</button>
-                <button type="button" class="fab"
-                  (click)="saveExpense()">Guardar</button>
+                <button type="button" class="fab" (click)="saveExpense()">Guardar</button>
               </div>
             </div>
           </form>
@@ -78,38 +68,23 @@
             </div>
             }
 
-            <app-custom-input
-              label="Foto"
-              type="file"
-              placeholder="Selecciona una imagen"
-              [control]="userForm.controls.invoice"
-              (change)="onFileSelected($event)">
+            <app-custom-input label="Foto" type="file" placeholder="Selecciona una imagen"
+              [control]="userForm.controls.invoice" (change)="onFileSelected($event)">
             </app-custom-input>
 
-            <app-custom-input
-              label="Descripción"
-              type="textarea"
-              [control]="userForm.controls.description">
+            <app-custom-input label="Descripción" type="textarea" [control]="userForm.controls.description">
             </app-custom-input>
 
-            <app-custom-input
-              label="Categoría"
-              type="text"
-              [control]="multiForm.controls.category">
+            <app-custom-input label="Categoría" type="text" [control]="multiForm.controls.category">
             </app-custom-input>
 
-            <app-custom-input
-              label="Cantidad"
-              type="number"
-              [control]="multiForm.controls.amount">
+            <app-custom-input label="Cantidad" type="number" [control]="multiForm.controls.amount">
             </app-custom-input>
 
             <div class="signature-container">
-              <signature-pad [options]="signaturePadOptions"
-                #signaturePad></signature-pad>
+              <signature-pad [options]="signaturePadOptions" #signaturePad></signature-pad>
               <div class="signature-actions">
-                <button type="button" class="fab"
-                  (click)="clearSignature()">
+                <button type="button" class="fab" (click)="clearSignature()">
                   Limpiar firma
                 </button>
                 <button type="button" class="fab" (click)="addProduct()">
@@ -150,8 +125,7 @@
               </table>
 
               <div class="signature-actions">
-                <button type="button" class="fab"
-                  (click)="saveAllProducts()">Guardar todos</button>
+                <button type="button" class="fab" (click)="saveAllProducts()">Guardar todos</button>
               </div>
             </div>
           </form>

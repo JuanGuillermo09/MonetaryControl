@@ -92,3 +92,19 @@
 .mat-button-disabled {
   opacity: 0.5 !important;
 }
+
+/* Desktop styles - pantalla grande */
+@media (min-width: 1024px) {
+  .shadow-card {
+    max-width: 900px; /* Más angosto en desktop */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1440px) {
+  .shadow-card {
+    max-width: 1000px; /* Un poco más ancho en pantallas muy grandes */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
+}

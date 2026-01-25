@@ -52,7 +52,7 @@ namespace MonetaryControl_BD.Controllers
 
 
 
-        [HttpDelete("DeleteUser{id:int}")]
+        [HttpDelete("DeleteUser/{id:int}")]
         public async Task<IActionResult> Delete(int id)
             => (await _service.DeleteAsync(id)) ? NoContent() : NotFound();
     }

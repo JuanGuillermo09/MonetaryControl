@@ -3,9 +3,9 @@ import { Perfil } from '../../service/perfil';
 import { CustomInput } from "../../utils/custom-input/custom-input";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import Swal from 'sweetalert2';
-import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
+import { Alert } from '../../service/alert';
 import { ChangePassword } from '../../service/change-password';
+import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
 
 @Component({
   selector: 'app-profile',
@@ -17,6 +17,7 @@ export class Profile {
 
   private perfilService = inject(Perfil);
   private changePasswordService = inject(ChangePassword);
+  private alertService = inject(Alert);
 
   user = signal<any | null>(null);
 
@@ -42,10 +43,16 @@ export class Profile {
       this.perfilService.ListUserId(Number(id)).subscribe({
         next: (data) => {
           this.user.set(data);
+          
+          const salary = Number(data.salary) || 0;
+          const salaryFormatted = new Intl.NumberFormat('es-CO').format(salary);
+
+          console.log(data);
+          
           this.userForm.patchValue({
             userName: data.userName,
             email: data.email,
-            salary: data.salary, // Asignar salario al formulario
+            salary: salaryFormatted, // Asignar salario formateado al formulario
             roleName: data.roleName,
             isActive: data.isActive ? 'Activo' : 'Inactivo'
           });
@@ -148,23 +155,13 @@ export class Profile {
         this.isEditing = false;
 
         // ✅ Alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Guardado!',
-          text: 'El usuario se actualizó correctamente',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        this.alertService.userUpdated();
 
         // Actualizamos la señal con los nuevos datos
         this.user.set({ ...this.user(), ...this.userForm.value });
       },
       error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al guardar',
-          text: 'Ocurrió un problema al guardar perfil',
-        });
+        this.alertService.updateUserError();
         console.error('Error al guardar usuario', err);
       }
     });
@@ -174,13 +171,7 @@ export class Profile {
   // Alternar edición
   // -----------------------------
   toggleEdit() {
-    Swal.fire({
-      title: '¿Quieres editar tu usuario?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, editar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.alertService.confirmEditProfile().then((result: any) => {
       if (result.isConfirmed) {
         // Solo si confirma
         this.isEditing = true;
@@ -202,13 +193,7 @@ export class Profile {
   isPassword = false;
 
   togglePassword() {
-    Swal.fire({
-      title: '¿Quieres cambiar la contraseña?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, cambiar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.alertService.confirmChangePassword().then((result: any) => {
       if (result.isConfirmed) {
         // Solo si confirma
         this.isPassword = true;
@@ -232,7 +217,7 @@ export class Profile {
 
     if (newPassword !== confirmNewPassword) {
       console.error('Las contraseñas nuevas no coinciden');
-      Swal.fire('Error', 'Las contraseñas nuevas no coinciden', 'error');
+      this.alertService.passwordsNotMatch();
       return;
     }
 
@@ -241,7 +226,7 @@ export class Profile {
     console.log('Token en localStorage:', token);
     if (!token) {
       console.error('No hay token en localStorage');
-      Swal.fire('Error', 'No hay sesión activa', 'error');
+      this.alertService.noActiveSession();
       return;
     }
 
@@ -251,13 +236,13 @@ export class Profile {
     this.changePasswordService.changePassword(token, newPassword!).subscribe({
       next: (res: any) => {
         console.log('Respuesta del backend:', res);
-        Swal.fire('Éxito', res.message || 'Contraseña cambiada exitosamente', 'success');
+        this.alertService.passwordChangedSuccess(res.message);
         this.togglePasswordCacelar();
       },
       error: (err) => {
         console.error('Error del backend:', err);
         const mensaje = err?.error?.message || 'No se pudo cambiar la contraseña';
-        Swal.fire('Error', mensaje, 'error');
+        this.alertService.passwordChangeError(mensaje);
       }
     });
   }

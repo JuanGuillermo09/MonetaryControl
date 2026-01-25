@@ -45,9 +45,6 @@
 }
 
 
-
-
-
 .table-container {
   max-height: 400px;
   /* 👈 ajusta la altura máxima */
@@ -95,4 +92,21 @@ mat-paginator {
 .fab-delete:hover {
   color: #940000;
   background-color: aliceblue;
+}
+
+
+/* Desktop styles - pantalla grande */
+@media (min-width: 1024px) {
+  .table-container{
+    max-width: 900px; /* Más angosto en desktop */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1440px) {
+  .table-container {
+    max-width: 1000px; /* Un poco más ancho en pantallas muy grandes */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
 }

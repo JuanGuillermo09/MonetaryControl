@@ -5,11 +5,13 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { CustomInput } from "../../utils/custom-input/custom-input";
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { Home } from '../../service/home';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import Swal from 'sweetalert2';
 import { ShowExpense } from "../../shared/show-expense/show-expense";
+import { ShowUser } from "../../shared/show-user/show-user";
+import { Perfil } from '../../service/perfil';
+import { Alert } from '../../service/alert';
 
 @Component({
   selector: 'app-home',
@@ -22,41 +24,70 @@ import { ShowExpense } from "../../shared/show-expense/show-expense";
     RouterModule,
     DatePipe,
     ShowExpense,
+    ShowUser,
     CurrencyPipe
-],
+  ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
 export class Homes implements OnInit {
 
   private expenseService = inject(Home);
+  private perfilService = inject(Perfil);
+  private route = inject(ActivatedRoute);
+  private alertService = inject(Alert);
 
+  // Controlador de vista actual
+  currentView = signal<'expenses' | 'users'>('expenses');
 
   // 👇 Signals para manejar el panel lateral
   isOpen = signal(false);
   selectedExpenseId = signal<number | null>(null);
+  selectedUserId = signal<number | null>(null);
 
   openDetail(id: number) {
     this.selectedExpenseId.set(id);
     this.isOpen.set(true);
   }
 
+  openUserDetail(id: number) {
+    if (id !== null && id !== undefined) {
+      this.selectedUserId.set(id);
+      this.isOpen.set(true);
+    } else {
+      this.alertService.invalidId();
+    }
+  }
+
   toggleDetail() {
     this.isOpen.set(false);
+    this.selectedExpenseId.set(null);
+    this.selectedUserId.set(null);
   }
 
   showForm = false;
 
   ngOnInit() {
-    const id = localStorage.getItem('userId');
+    // Escuchar cambios en los parámetros de la URL
+    this.route.queryParams.subscribe(params => {
+      const view = params['view'];
+      if (view === 'users') {
+        this.currentView.set('users');
+        this.loadUsers();
+      } else {
+        this.currentView.set('expenses');
+        this.loadExpenses();
+      }
+    });
+  }
 
+  loadExpenses() {
+    const id = localStorage.getItem('userId');
     if (id) {
       this.expenseService.ListExpenses().subscribe({
         next: (data) => {
-          // Filtrar por el ID del usuario
+          console.log("Gastos:", data);
           const userExpenses = data.filter(e => e.userId == Number(id));
-
-          // Asignar al datasource de la tabla
           this.dataSource.data = userExpenses;
         },
         error: (err) => console.error('Error al obtener gastos:', err)
@@ -64,19 +95,40 @@ export class Homes implements OnInit {
     }
   }
 
+  loadUsers() {
+    this.perfilService.ListUsers().subscribe({
+      next: (data) => {
+        console.log("Usuarios:", data);
+        this.dataSourceUsers.data = data;
+      },
+      error: (err) => console.error('Error al obtener usuarios:', err)
+    });
+  }
+
 
   miForm = new FormGroup({
     search: new FormControl("", [Validators.required,]),
-
   });
+
+  miFormUsers = new FormGroup({
+    search: new FormControl("", [Validators.required,]),
+  });
+
+  // Columnas para gastos
   displayedColumns: string[] = ['expenseId', 'date', 'amount', 'accion'];
-  dataSource = new MatTableDataSource<any>([]); // se llenará con la API
+  dataSource = new MatTableDataSource<any>([]);
+
+  // Columnas para usuarios
+  displayedColumnsUsers: string[] = ['userId', 'userName', 'salary', 'rol', 'accion'];
+  dataSourceUsers = new MatTableDataSource<any>([]);
 
   // 👇 ViewChild para conectar el paginador
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorUsers') paginatorUsers!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSourceUsers.paginator = this.paginatorUsers;
   }
 
   filtrar(event: Event) {
@@ -84,43 +136,57 @@ export class Homes implements OnInit {
     this.dataSource.filter = filtro.trim().toLowerCase();
   }
 
+  filtrarUsers(event: Event) {
+    const filtro = (event.target as HTMLInputElement).value;
+    this.dataSourceUsers.filter = filtro.trim().toLowerCase();
+  }
+
+  // Métodos para cambiar de vista
+  showExpensesView() {
+    this.currentView.set('expenses');
+    this.loadExpenses();
+  }
+
+  showUsersView() {
+    this.currentView.set('users');
+    this.loadUsers();
+  }
+
 
   // -----------------------------
   // Eliminar gasto
   // -----------------------------
   deleteExpense(id: number) {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Este gasto se eliminará de forma permanente',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+    this.alertService.confirmDeleteExpense().then((result) => {
       if (result.isConfirmed) {
         this.expenseService.DeleteExpense(id).subscribe({
           next: (res) => {
-            Swal.fire({
-              icon: 'success',
-              title: '¡Eliminado!',
-              text: 'El gasto se eliminó correctamente',
-              timer: 2000,
-              showConfirmButton: false
-            });
-
-            // 🔹 Opcional: refrescar la lista de gastos
-            //this.loadExpenses(); // <-- crea este método para recargar los datos
-            this.dataSource.data = this.dataSource.data.filter(e => e.expenseId !== id);
+            this.alertService.expenseDeleted();
+            this.dataSource.data = this.dataSource.data.filter((e: any) => e.expenseId !== id);
           },
           error: (err) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error al eliminar',
-              text: 'Ocurrió un problema al eliminar el gasto',
-            });
+            this.alertService.deleteExpenseError();
             console.error('Error al eliminar gasto', err);
+          }
+        });
+      }
+    });
+  }
+
+  // -----------------------------
+  // Eliminar usuario
+  // -----------------------------
+  deleteUser(id: number) {
+    this.alertService.confirmDeleteUser().then((result) => {
+      if (result.isConfirmed) {
+        this.perfilService.DeleteUser(id).subscribe({
+          next: (res) => {
+            this.alertService.userDeleted();
+            this.dataSourceUsers.data = this.dataSourceUsers.data.filter((e: any) => e.userId !== id);
+          },
+          error: (err) => {
+            this.alertService.deleteUserError();
+            console.error('Error al eliminar usuario', err);
           }
         });
       }

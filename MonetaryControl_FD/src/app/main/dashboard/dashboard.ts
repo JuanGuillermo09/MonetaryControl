@@ -47,6 +47,7 @@ export class Dashboard {
       // 🔹 KPI de salario
       this.perfilService.ListUserId(userId).subscribe({
         next: (data) => {
+          console.log("Usuario:" ,data);
           const salary = Number(data.salary) || 0;
           const savings = Number(data.savings) || 0;
           this.Salary1 = salary
@@ -61,6 +62,7 @@ export class Dashboard {
       // 🔹 KPI de gastos últimos 30 días (solo usuario logueado)
       this.ExpenseService.ListExpenses().subscribe({
         next: (data) => {
+          console.log( "Gastos Ultimos 30 dias:" , data);
           // Actualizamos la lista completa de gastos
           this.recent.set(data);
           // Usamos directamente el filtro que ya tienes
@@ -83,7 +85,8 @@ export class Dashboard {
 
     // 🔹 KPI de usuarios totales
     this.perfilService.ListUsers().subscribe({
-      next: (usuarios) => {      
+      next: (usuarios) => {     
+        console.log("Numero de Usuarios:" , usuarios);
         this.kpis[3].value = usuarios.length.toString();      
       },
       error: (err) => console.error('Error al obtener usuarios:', err)

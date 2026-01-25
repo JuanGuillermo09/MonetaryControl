@@ -1,77 +1,140 @@
-
 <div class="main-content">
-  <!-- Contenedor para botón y buscador -->
-  <div class="toolbar">
-    <button mat-button class="fab-add" routerLink="/expense-items">
-      <!-- <mat-icon>add</mat-icon> -->Agregar
-    </button>
+  <!-- Vista de Historial de Gastos -->
+  @if (currentView() === 'expenses') {
+    <!-- Contenedor para botón y buscador -->
+    <div class="toolbar">
+      <button mat-button class="fab-add" routerLink="/expense-items">
+        Agregar
+      </button>
 
-    <div class="search-box">
-      <app-custom-input
-        label="Buscar"
-        type="text"
-        placeholder="buscar"
-        (keyup)="filtrar($event)"
-        [control]="miForm.controls.search">
-      </app-custom-input>
+      <div class="search-box">
+        <app-custom-input label="Buscar" type="text" placeholder="buscar" (keyup)="filtrar($event)"
+          [control]="miForm.controls.search">
+        </app-custom-input>
+      </div>
     </div>
-  </div>
 
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
-      <!-- expenseId Column -->
-      <ng-container matColumnDef="expenseId">
-        <th mat-header-cell *matHeaderCellDef sticky> No. </th>
-        <td mat-cell *matCellDef="let element"> {{element.expenseId}} </td>
-      </ng-container>
+        <!-- expenseId Column -->
+        <ng-container matColumnDef="expenseId">
+          <th mat-header-cell *matHeaderCellDef sticky> No. </th>
+          <td mat-cell *matCellDef="let element"> {{element.expenseId}} </td>
+        </ng-container>
 
-      <!-- date Column -->
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef sticky> Fecha </th>
-        <td mat-cell *matCellDef="let element"> {{element.date |
-          date:'dd/MM/yyyy'}} </td>
-      </ng-container>
+        <!-- date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef sticky> Fecha </th>
+          <td mat-cell *matCellDef="let element"> {{element.date |
+            date:'dd/MM/yyyy'}} </td>
+        </ng-container>
 
-      <!-- amount Column -->
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef sticky> Monto </th>
-        <td mat-cell *matCellDef="let element"> {{element.amount | currency:'COP: ' }} </td>
-      </ng-container>
+        <!-- amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef sticky> Monto </th>
+          <td mat-cell *matCellDef="let element"> {{element.amount | currency:'COP: ' }} </td>
+        </ng-container>
 
-      <!-- accion Column -->
-      <ng-container matColumnDef="accion">
-        <th mat-header-cell *matHeaderCellDef sticky> Accion </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-button
-            class="fab-visibility"
-            (click)="openDetail(element.expenseId)">
-            <mat-icon>
-              visibility
-            </mat-icon>
-          </button>
-          <button mat-button
-            class="fab-delete"
-            (click)="deleteExpense(element.expenseId)">
-            <mat-icon>
-              delete
-            </mat-icon>
-          </button>
-        </td>
-      </ng-container>
+        <!-- accion Column -->
+        <ng-container matColumnDef="accion">
+          <th mat-header-cell *matHeaderCellDef sticky> Accion </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button class="fab-visibility" (click)="openDetail(element.expenseId)">
+              <mat-icon>
+                visibility
+              </mat-icon>
+            </button>
+            <button mat-button class="fab-delete" (click)="deleteExpense(element.expenseId)">
+              <mat-icon>
+                delete
+              </mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
 
-  <!-- El paginador SIEMPRE fijo abajo -->
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]"></mat-paginator>
-  @if (isOpen()) {
-  <app-show-expense
-    [expenseId]="selectedExpenseId()"
-    (close)="toggleDetail()">
-  </app-show-expense>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
   }
 
+  <!-- Vista de Usuarios -->
+  @if (currentView() === 'users') {
+    <!-- Contenedor para botón y buscador -->
+    <div class="toolbar">
+      <button mat-button class="fab-add" routerLink="/register-user">
+        Agregar Cliente
+      </button>
+
+      <div class="search-box">
+        <app-custom-input label="Buscar" type="text" placeholder="buscar" (keyup)="filtrarUsers($event)"
+          [control]="miFormUsers.controls.search">
+        </app-custom-input>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSourceUsers" class="mat-elevation-z8">
+
+        <!-- userId Column -->
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell *matHeaderCellDef sticky> ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+        </ng-container>
+
+        <!-- userName Column -->
+        <ng-container matColumnDef="userName">
+          <th mat-header-cell *matHeaderCellDef sticky> Nombre </th>
+          <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+        </ng-container>
+
+        <!-- email Column -->
+        <ng-container matColumnDef="salary">
+          <th mat-header-cell *matHeaderCellDef sticky> Salary </th>
+          <td mat-cell *matCellDef="let element"> {{element.salary}} </td>
+        </ng-container>
+
+        <!-- rol Column -->
+        <ng-container matColumnDef="rol">
+          <th mat-header-cell *matHeaderCellDef sticky> Rol </th>
+          <td mat-cell *matCellDef="let element"> {{element.roleName}} </td>
+        </ng-container>
+
+        <!-- accion Column -->
+        <ng-container matColumnDef="accion">
+          <th mat-header-cell *matHeaderCellDef sticky> Accion </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-button class="fab-visibility" (click)="openUserDetail(element.userId)">
+              <mat-icon>
+                visibility
+              </mat-icon>
+            </button>
+            <button mat-button class="fab-delete" (click)="deleteUser(element.userId)">
+              <mat-icon>
+                delete
+              </mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsUsers"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsUsers;"></tr>
+      </table>
+
+      <mat-paginator #paginatorUsers [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+    </div>
+  }
+
+  @if (isOpen()) {
+    @if (selectedExpenseId()) {
+      <app-show-expense [expenseId]="selectedExpenseId()" (close)="toggleDetail()">
+      </app-show-expense>
+    } @else if (selectedUserId()) {
+      <app-show-user [perfilId]="selectedUserId()!" (close)="toggleDetail()">
+      </app-show-user>
+    }
+  }
 </div>

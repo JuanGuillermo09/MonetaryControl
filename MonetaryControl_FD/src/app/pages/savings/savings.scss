@@ -1,0 +1,11 @@
+.main-content {
+  padding: 16px;
+  padding-top: 80px;
+  /* en vez de margin-top */
+
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  /* si hay mucho contenido, scroll solo aquí */
+}
+

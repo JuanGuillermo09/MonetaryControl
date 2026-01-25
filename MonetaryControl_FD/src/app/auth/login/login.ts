@@ -9,7 +9,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { CustomTitleHelpLink } from "../../utils/custom-title-help-link/custom-title-help-link";
 import { Auth } from '../../service/auth';
 import { lastValueFrom } from 'rxjs';
-import Swal from 'sweetalert2';
+import { Alert } from '../../service/alert';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 @Component({
   selector: 'app-login',
@@ -31,6 +31,7 @@ export class Login {
   private auth = inject(Auth);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private alertService = inject(Alert);
 
   miForm!: FormGroup;
 
@@ -69,31 +70,16 @@ export class Login {
           localStorage.removeItem('savedPassword');
         }
 
-        await Swal.fire({
-          icon: 'success',
-          title: '¡Bienvenido!',
-          html: `<h4>${result.userName}</h4>
-        <p>Has iniciado sesión correctamente</p>`,
-          timer: 1000,
-          showConfirmButton: false
-        });
+        await this.alertService.welcome(result.userName);
 
         this.router.navigate(['/dashboard']);
       } catch (error: any) {
         console.error(error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Credenciales inválidas',
-          text: 'Por favor corregir'
-        });
+        this.alertService.invalidCredentials();
       }
     } else {
       this.miForm.markAllAsTouched();
-      Swal.fire({
-        icon: 'warning',
-        title: 'Formulario incompleto',
-        text: 'Por favor completa todos los campos'
-      });
+      this.alertService.incompleteForm();
     }
   }
 

@@ -33,6 +33,7 @@ export class Perfil {
 
   // Función para eliminar un Usuario por ID
   DeleteUser(id: number): Observable<any> {
+    // Intentar endpoint REST estándar
     return this.http.delete<any>(`${this.apiUrl}/DeleteUser/${id}`);
   }
 

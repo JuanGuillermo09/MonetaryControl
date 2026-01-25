@@ -27,6 +27,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
       },
       {
+        path: 'register-user',
+        loadComponent: () => import('./auth/register-user/register-user').then((m) => m.RegisterUser),
+        canActivate: [authGuard]
+      },
+      {
         path: 'home',
         loadComponent: () => import('./pages/home/home').then(m => m.Homes),
         canActivate: [authGuard]
@@ -41,17 +46,18 @@ export const routes: Routes = [
         loadComponent: () => import('./main/dashboard/dashboard').then(m => m.Dashboard),
         canActivate: [authGuard]
       },
-      {
-        path: 'manage',
-        loadComponent: () => import('./pages/manage-expense/manage-expense').then(m => m.ManageExpense),
-        canActivate: [authGuard]
-      },
+
       {
         path: 'expense-items',
         loadComponent: () => import('./pages/expense-items/expense-items').then(m => m.ExpenseItems),
         canActivate: [authGuard]
       },
-      
+      {
+        path: 'savings',
+        loadComponent: () => import('./pages/savings/savings').then(m => m.Savings),
+        canActivate: [authGuard]
+      },
+
       {
         path: '',
         redirectTo: 'dashboard',

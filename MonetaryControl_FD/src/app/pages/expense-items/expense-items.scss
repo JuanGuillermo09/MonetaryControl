@@ -52,6 +52,29 @@
 
 }
 
+.fab-add {
+  margin-bottom: 20px;
+  background-color: #005cbb;
+  color: #d7e3ff;
+  border: none;
+  border-radius: 5px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  /* lo mantiene fijo en la pantalla */
+  top: 90px;
+  /* distancia desde la parte superior */
+  right: 35px;
+  /* distancia desde la derecha */
+  z-index: 1000;
+  /* para que quede por encima de otros elementos */
+}
+
+
 .fab {
   margin: 10px;
   background-color: #005cbb;
@@ -157,4 +180,21 @@
 
 .grid{
   padding-top: 15px;
+}
+
+
+/* Desktop styles - pantalla grande */
+@media (min-width: 1024px) {
+  .shadow-card {
+    max-width: 900px; /* Más angosto en desktop */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1440px) {
+  .shadow-card {
+    max-width: 1000px; /* Un poco más ancho en pantallas muy grandes */
+    margin: 0 auto; /* Centrar la tarjeta */
+  }
 }

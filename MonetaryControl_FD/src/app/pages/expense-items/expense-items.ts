@@ -7,8 +7,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AngularSignaturePadModule, SignaturePadComponent, NgSignaturePadOptions } from '@almothafar/angular-signature-pad';
 
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { Alert } from '../../service/alert';
+import { Router, RouterLink } from '@angular/router';
 import { CustomInput } from '../../utils/custom-input/custom-input';
 import { CustomTitleHelpLink } from '../../utils/custom-title-help-link/custom-title-help-link';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-expense-items',
-  imports: [CustomInput, ReactiveFormsModule, MatCardModule, CustomTitleHelpLink, CommonModule, AngularSignaturePadModule,  MatTabsModule, MatIconModule],
+  imports: [CustomInput, ReactiveFormsModule, MatCardModule, CustomTitleHelpLink, CommonModule, AngularSignaturePadModule, MatTabsModule, MatIconModule, RouterLink],
   templateUrl: './expense-items.html',
   styleUrl: './expense-items.scss',
 
@@ -39,6 +39,7 @@ editingIndex: number | null = null;
 
   private expenseService = inject(Home);
   private router = inject(Router);
+  private alertService = inject(Alert);
 
   @ViewChild('signaturePad') signaturePad!: SignaturePadComponent;
 
@@ -149,27 +150,16 @@ editingIndex: number | null = null;
         if (this.signaturePad) this.signaturePad.clear();
 
         // 🔹 Mostrar alerta con opciones
-        Swal.fire({
-          title: '¡Guardado!',
-          text: 'El gasto se guardó correctamente',
-          icon: 'success',
-          showCancelButton: true,
-          confirmButtonText: 'Ir al Home',
-          cancelButtonText: 'Seguir aquí'
-        }).then((result) => {
+        this.alertService.expenseSavedWithNavigation().then((result: any) => {
           if (result.isConfirmed) {
             // 🔹 Redirigir a Home
-            this.router.navigate(['/home']);
+            this.router.navigate(['/home?view=expenses']);
           }
           // Si cancela, se queda en la misma vista
         });
       },
       error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al guardar',
-          text: 'Ocurrió un problema al guardar el gasto',
-        });
+        this.alertService.expenseSavedError();
         console.error('Error al guardar gasto', err);
       }
     });
@@ -184,7 +174,7 @@ addProduct() {
   const amt = this.multiForm.value.amount;
 
   if (!desc || !cat || amt == null) {
-    Swal.fire('Campos vacíos', 'Por favor completa todos los campos', 'warning');
+    this.alertService.emptyFields();
     return;
   }
 
@@ -193,10 +183,10 @@ addProduct() {
   if (this.editingIndex !== null) {
     this.products[this.editingIndex] = newProduct;
     this.editingIndex = null;
-    Swal.fire('Actualizado', 'Producto editado correctamente', 'success');
+    this.alertService.productUpdated();
   } else {
     this.products.push(newProduct);
-    Swal.fire('Agregado', 'Producto agregado a la lista', 'success');
+    this.alertService.productAdded();
   }
 
   this.multiForm.reset();
@@ -218,17 +208,13 @@ editProduct(index: number) {
 // -----------------------------
 // ELIMINAR PRODUCTO
 // -----------------------------
+// ELIMINAR PRODUCTO
+// -----------------------------
 deleteProduct(index: number) {
-  Swal.fire({
-    title: '¿Eliminar producto?',
-    text: 'Esta acción no se puede deshacer',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-  }).then((res) => {
+  this.alertService.confirmDeleteProduct().then((res: any) => {
     if (res.isConfirmed) {
       this.products.splice(index, 1);
-      Swal.fire('Eliminado', 'El producto fue eliminado', 'success');
+      this.alertService.productDeleted();
     }
   });
 }
@@ -238,7 +224,7 @@ deleteProduct(index: number) {
 // -----------------------------
 saveAllProducts() {
   if (this.products.length === 0) {
-    Swal.fire('Sin productos', 'Agrega al menos un producto antes de guardar', 'warning');
+    this.alertService.noProducts();
     return;
   }
 
